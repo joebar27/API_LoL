@@ -1,6 +1,6 @@
 # API_LoL :
         
-    Cette API permet de récupérer des informations sur les détails d'un joueur ou d'un match de League of Legends, 
+Cette API permet de récupérer des informations sur les détails d'un joueur ou d'un match de League of Legends, 
 pour les exploiter par le biais de la BDD de la meme façon qu'avec l'API RIOT disponible, 
 mais sans limitation de requête.
 
