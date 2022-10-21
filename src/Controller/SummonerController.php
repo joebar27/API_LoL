@@ -19,13 +19,23 @@ class SummonerController extends AbstractController
     {
         //Utilisation du service pour récupérer les donnée du summoner sur l'API RIOT
         $summoner = $getSummoner->getSummoner($summonerName);
-        // mise en BDD des informations récupérer
-        $summonerEntity = new Summoners();
-        $summonerEntity->setSummonnersDetail($summoner);
-        $summonerEntity->setSummonerName($summonerName);
-        $em = $doctrine->getManager();        
-        $em->persist($summonerEntity);
-        $em->flush();
+        // recherche du summoner dans la base de donnée :
+        $summonerInDb = $doctrine->getRepository(Summoners::class)->findOneBy(['summonerName' => $summonerName]);
+        if (!$summonerInDb) {
+            // mise en BDD des informations récupérer
+            $summonerEntity = new Summoners();
+            $summonerEntity->setSummonnersDetail($summoner);
+            $summonerEntity->setSummonerName($summonerName);
+            $em = $doctrine->getManager();
+            $em->persist($summonerEntity);
+            $em->flush();
+        }else{
+            // mise à jour des informations si le summoner existe déjà
+            $summonerInDb->setSummonnersDetail($summoner);
+            $em = $doctrine->getManager();
+            $em->persist($summonerInDb);
+            $em->flush();
+        }
 
         return new JsonResponse($summoner) ;
     }
@@ -33,10 +43,10 @@ class SummonerController extends AbstractController
     /**
      * @Route("/api/getSummoner/{summonerName}", name="getSummoner", methods={"GET"})
      */
-    public function getSummonerBdd($summonerName,SummonersRepository $summonersRepository): JsonResponse
+    public function getSummonerBdd($summonerName, SummonersRepository $summonersRepository): JsonResponse
     {
         $summoners = $summonersRepository->findOneBy(['summonerName' => $summonerName]);
-        
+
         $dataSummoner = [
             'summonnersDetail' => $summoners->getSummonnersDetail(),
         ];
