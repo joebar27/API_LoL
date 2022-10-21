@@ -20,14 +20,27 @@ class MatchesController extends AbstractController
     {
         //Utilisation du service pour récupérer les donnée du summoner sur l'API RIOT
         $matchesList = $getMatches->getMatches($puuid);
+        // recherche de la liste de match dans la base de donnée :
+        $matchesInDb = $doctrine->getRepository(Matches::class)->findOneBy(['summonerMatchesList' => $puuid]);
+        if (!$matchesInDb) {
+            // mise en BDD des informations récupérer si la liste de match n'existe pas :
+            $matchesEntity = new Matches();
+            $matchesEntity->setMatchesList($matchesList);
+            $matchesEntity->setSummonerMatchesList($puuid);
 
-        $matchesEntity = new Matches();
-        $matchesEntity->setMatchesList($matchesList);
-        $matchesEntity->setSummonerMatchesList($puuid);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($matchesEntity);
+            $entityManager->flush();
+        } else {
+            // mise à jour des informations si la liste du match existe déjà :
+            $matchesInDb->setMatchesList($matchesList);
+            
+            $em = $doctrine->getManager();
+            $em->persist($matchesInDb);
+            $em->flush();
+        }
 
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($matchesEntity);
-        $entityManager->flush();
+
 
         return new JsonResponse($matchesList);
     }
