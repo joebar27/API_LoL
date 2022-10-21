@@ -14,19 +14,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MatchController extends AbstractController
 {
     /**
-     * @Route("/api/setmatchdetail/{gameId}", name="setmatchdetail")
+     * @Route("/api/setmatchdetail/{matchId}", name="setmatchdetail")
      */
-    public function setMatchDetail($gameId, ManagerRegistry $doctrine, GetMatchDetailService $getMatchDetailService): Response
+    public function setMatchDetail($matchId, ManagerRegistry $doctrine, GetMatchDetailService $getMatchDetailService): Response
     {
         //Utilisation du service pour récupérer les details du match sur l'API RIOT
-        $match = $getMatchDetailService->getMatchDetail($gameId);
+        $match = $getMatchDetailService->getMatchDetail($matchId);
         // recherche du détail d'un match dans la base de donnée :
-        $matchInDb = $doctrine->getRepository(MatchDetail::class)->findOneBy(['summonerNameList' => $gameId]);
+        $matchInDb = $doctrine->getRepository(MatchDetail::class)->findOneBy(['summonerNameList' => $matchId]);
         if (!$matchInDb) {
             // mise en BDD des informations récupérer
             $matchDetail = new MatchDetail();
             $matchDetail->setMatchDetail($match);
-            $matchDetail->setSummonerNameList($gameId);
+            $matchDetail->setMatchId($matchId);
 
             $em = $doctrine->getManager();
             $em->persist($matchDetail);
@@ -40,19 +40,17 @@ class MatchController extends AbstractController
             $em->flush();
         }
 
-
-
         return new JsonResponse($match);
     }
 
     /**
-     * @Route("/api/getmatchdetail/{gameId}", name="getmatch", methods={"GET"})
+     * @Route("/api/getmatchdetail/{matchId}", name="getmatch", methods={"GET"})
      */
-    public function getMatch($gameId, MatchDetailRepository $matchDetailRepository): JsonResponse
+    public function getMatch($matchId, MatchDetailRepository $matchDetailRepository): JsonResponse
     {
-        $data = $matchDetailRepository->findOneBy(['summonerNameList' => $gameId]);
+        $data = $matchDetailRepository->findOneBy(['matchId' => $matchId]);
         $dataMatch = [
-            'gameId' => $data->getSummonerNameList(),
+            'matchId' => $data->getMatchId(),
             'matchesList' => $data->getMatchDetail(),
         ];
         return new JsonResponse($dataMatch);

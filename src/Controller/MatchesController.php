@@ -26,7 +26,7 @@ class MatchesController extends AbstractController
             // mise en BDD des informations récupérer si la liste de match n'existe pas :
             $matchesEntity = new Matches();
             $matchesEntity->setMatchesList($matchesList);
-            $matchesEntity->setSummonerMatchesList($puuid);
+            $matchesEntity->setPuuid($puuid);
 
             $entityManager = $doctrine->getManager();
             $entityManager->persist($matchesEntity);
@@ -50,7 +50,7 @@ class MatchesController extends AbstractController
      */
     public function getMatchesApi($puuid, MatchesRepository $matchesRepository): Response
     {
-        $matchesList = $matchesRepository->findOneBy(['summonerMatchesList' => $puuid]);
+        $matchesList = $matchesRepository->findOneBy(['puuid' => $puuid]);
         $dataMatches = ['matchesList' => $matchesList->getMatchesList()];
 
         return new JsonResponse($dataMatches);
