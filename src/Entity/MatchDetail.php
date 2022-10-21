@@ -17,7 +17,7 @@ class MatchDetail
     private array $matchDetail = [];
 
     #[ORM\Column(length: 255)]
-    private ?string $summonerNameList = null;
+    private ?string $matchId = null;
 
     public function getId(): ?int
     {
@@ -36,14 +36,14 @@ class MatchDetail
         return $this;
     }
 
-    public function getSummonerNameList(): ?string
+    public function getMatchId(): ?string
     {
-        return $this->summonerNameList;
+        return $this->matchId;
     }
 
-    public function setSummonerNameList(string $summonerNameList): self
+    public function setMatchId(string $matchId): self
     {
-        $this->summonerNameList = $summonerNameList;
+        $this->matchId = $matchId;
 
         return $this;
     }
