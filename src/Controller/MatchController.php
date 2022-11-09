@@ -44,7 +44,7 @@ class MatchController extends AbstractController
     }
 
     /**
-     * @Route("/api/getMatchdetail/{matchId}", name="getmatch", methods={"GET"})
+     * @Route("/api/getMatchDetail/{matchId}", name="getmatch", methods={"GET"})
      */
     public function getMatch($matchId, MatchDetailRepository $matchDetailRepository): JsonResponse
     {
