@@ -46,9 +46,22 @@ class MatchController extends AbstractController
     /**
      * @Route("/api/getMatchDetail/{matchId}", name="getmatch", methods={"GET"})
      */
-    public function getMatch($matchId, MatchDetailRepository $matchDetailRepository): JsonResponse
+    public function getMatch($matchId, ManagerRegistry $doctrine, MatchDetailRepository $matchDetailRepository, GetMatchDetailService $getMatchDetailService): JsonResponse
     {
         $data = $matchDetailRepository->findOneBy(['matchId' => $matchId]);
+        if (!$data) {
+            //Utilisation du service pour récupérer les details du match sur l'API RIOT
+            $match = $getMatchDetailService->getMatchDetail($matchId);
+            // mise en BDD des informations récupérer
+            $matchDetail = new MatchDetail();
+            $matchDetail->setMatchDetail($match);
+            $matchDetail->setMatchId($matchId);
+
+            $em = $doctrine->getManager();
+            $em->persist($matchDetail);
+            $em->flush();
+        }
+        
         $dataMatch = [
             'matchId' => $data->getMatchId(),
             'matchesList' => $data->getMatchDetail(),
