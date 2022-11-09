@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MatchController extends AbstractController
 {
     /**
-     * @Route("/api/setmatchdetail/{matchId}", name="setmatchdetail")
+     * @Route("/api/setMatchdetail/{matchId}", name="setmatchdetail")
      */
     public function setMatchDetail($matchId, ManagerRegistry $doctrine, GetMatchDetailService $getMatchDetailService): Response
     {
@@ -44,7 +44,7 @@ class MatchController extends AbstractController
     }
 
     /**
-     * @Route("/api/getmatchdetail/{matchId}", name="getmatch", methods={"GET"})
+     * @Route("/api/getMatchdetail/{matchId}", name="getmatch", methods={"GET"})
      */
     public function getMatch($matchId, MatchDetailRepository $matchDetailRepository): JsonResponse
     {
