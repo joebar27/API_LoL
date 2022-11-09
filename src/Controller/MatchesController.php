@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MatchesController extends AbstractController
 {
     /**
-     * @Route("/api/setMatches/{puuid}", name="setMatches")
+     * @Route("/api/setMatches/{puuid}", name="setMatches", methods={"POST"})
      */
     public function setMatchesApi($puuid, ManagerRegistry $doctrine, GetMatchesService $getMatches): Response
     {

@@ -22,7 +22,7 @@ class GetSummonerService
                     'Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
                     'Accept-Charset: application/x-www-form-urlencoded; charset=UTF-8',
                     'Origin: https://developer.riotgames.com',
-                    'X-Riot-Token: RGAPI-339febb4-d725-4c7f-a415-d1d55dff43d5');
+                    'X-Riot-Token: RGAPI-dd0ee5de-b287-4c82-b7e1-656d36b15b1b');
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $urlGetSummoner);

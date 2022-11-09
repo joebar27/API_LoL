@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MatchController extends AbstractController
 {
     /**
-     * @Route("/api/setmatchdetail/{matchId}", name="setmatchdetail")
+     * @Route("/api/setmatchdetail/{matchId}", name="setmatchdetail", methods={"POST"})
      */
     public function setMatchDetail($matchId, ManagerRegistry $doctrine, GetMatchDetailService $getMatchDetailService): Response
     {

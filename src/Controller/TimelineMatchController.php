@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TimelineMatchController extends AbstractController
 {
     /**
-     * @Route("/api/setTimelineMatch/{matchId}", name="settimelinematch")
+     * @Route("/api/setTimelineMatch/{matchId}", name="settimelinematch", methods={"POST"})
      */
     public function setTimelineMatch($matchId, ManagerRegistry $doctrine, GetTimelineMatchService $getTimelineMatchService): Response
     {
