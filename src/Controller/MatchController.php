@@ -14,14 +14,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MatchController extends AbstractController
 {
     /**
-     * @Route("/api/setmatchdetail/{matchId}", name="setmatchdetail", methods={"POST"})
+     * @Route("/api/setmatchdetail/{matchId}", name="setmatchdetail")
      */
     public function setMatchDetail($matchId, ManagerRegistry $doctrine, GetMatchDetailService $getMatchDetailService): Response
     {
         //Utilisation du service pour récupérer les details du match sur l'API RIOT
         $match = $getMatchDetailService->getMatchDetail($matchId);
         // recherche du détail d'un match dans la base de donnée :
-        $matchInDb = $doctrine->getRepository(MatchDetail::class)->findOneBy(['summonerNameList' => $matchId]);
+        $matchInDb = $doctrine->getRepository(MatchDetail::class)->findOneBy(['matchId' => $matchId]);
         if (!$matchInDb) {
             // mise en BDD des informations récupérer
             $matchDetail = new MatchDetail();

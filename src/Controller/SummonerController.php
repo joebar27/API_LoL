@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class SummonerController extends AbstractController
 {
     /**
-     * @Route("/api/setSummoner/{summonerName}", name="setSummoner", methods={"POST"})
+     * @Route("/api/setSummoner/{summonerName}", name="setSummoner")
      */
     public function setSummonerApi($summonerName, ManagerRegistry $doctrine, GetSummonerService $getSummoner): JsonResponse
     {
