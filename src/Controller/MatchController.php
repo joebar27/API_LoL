@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MatchController extends AbstractController
 {
     /**
-     * @Route("/api/setMatchdetail/{matchId}", name="setmatchdetail")
+     * @Route("/api/setMatchDetail/{matchId}", name="setmatchdetail")
      */
     public function setMatchDetail($matchId, ManagerRegistry $doctrine, GetMatchDetailService $getMatchDetailService): Response
     {
@@ -49,6 +49,7 @@ class MatchController extends AbstractController
     public function getMatch($matchId, ManagerRegistry $doctrine, MatchDetailRepository $matchDetailRepository, GetMatchDetailService $getMatchDetailService): JsonResponse
     {
         $data = $matchDetailRepository->findOneBy(['matchId' => $matchId]);
+        
         if (!$data) {
             //Utilisation du service pour récupérer les details du match sur l'API RIOT
             $match = $getMatchDetailService->getMatchDetail($matchId);
@@ -60,8 +61,10 @@ class MatchController extends AbstractController
             $em = $doctrine->getManager();
             $em->persist($matchDetail);
             $em->flush();
+
+            $data = $doctrine->getRepository(MatchDetail::class)->findOneBy(['matchId' => $matchId]);
         }
-        
+
         $dataMatch = [
             'matchId' => $data->getMatchId(),
             'matchesList' => $data->getMatchDetail(),

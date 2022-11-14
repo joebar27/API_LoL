@@ -45,25 +45,27 @@ class SummonerController extends AbstractController
      */
     public function getSummonerBdd($summonerName, ManagerRegistry $doctrine, GetSummonerService $getSummoner, SummonersRepository $summonersRepository): JsonResponse
     {
-        $summoners = $summonersRepository->findOneBy(['summonerName' => $summonerName]);
+        $summonerInDb = $summonersRepository->findOneBy(['summonerName' => $summonerName]);
 
-        if (!$summoners) {
+        if (!$summonerInDb) {
             //Utilisation du service pour récupérer les donnée du summoner sur l'API RIOT
-            $summoner = $getSummoner->getSummoner($summonerName);
-            // recherche du summoner dans la base de donnée :
+            $summonerInRiot = $getSummoner->getSummoner($summonerName);
+            // mise en BDD des informations récupérer
+            $summonerEntity = new Summoners();
+            $summonerEntity->setSummonnersDetail($summonerInRiot);
+            $summonerEntity->setSummonerName($summonerName);
+            
+            $em = $doctrine->getManager();
+            $em->persist($summonerEntity);
+            $em->flush();
+
             $summonerInDb = $doctrine->getRepository(Summoners::class)->findOneBy(['summonerName' => $summonerName]);
-            if (!$summonerInDb) {
-                // mise en BDD des informations récupérer
-                $summonerEntity = new Summoners();
-                $summonerEntity->setSummonnersDetail($summoner);
-                $summonerEntity->setSummonerName($summonerName);
-                $em = $doctrine->getManager();
-                $em->persist($summonerEntity);
-                $em->flush();
-            }
         }
+
+        // dd($summonerInDb);
+
         $dataSummoner = [
-            'summonnersDetail' => $summoners->getSummonnersDetail(),
+            'summonnersDetail' => $summonerInDb->getSummonnersDetail(),
         ];
 
         return new JsonResponse($dataSummoner);

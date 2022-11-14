@@ -46,9 +46,25 @@ class TimelineMatchController extends AbstractController
     /**
      * @Route("/api/getTimelineMatch/{matchId}", name="gettimelinematch", methods={"GET"})
      */
-    public function getTimelineMatch($matchId, TimelineMatchRepository $timelineMatchRepository): JsonResponse
+    public function getTimelineMatch($matchId, ManagerRegistry $doctrine, GetTimelineMatchService $getTimelineMatchService, TimelineMatchRepository $timelineMatchRepository): JsonResponse
     {
         $data = $timelineMatchRepository->findOneBy(['matchId' => $matchId]);
+        
+        if (!$data) {
+            //Utilisation du service pour récupérer les details du match sur l'API RIOT
+            $match = $getTimelineMatchService->getTimelineMatch($matchId);
+            // mise en BDD des informations récupérer
+            $timelineDetail = new TimelineMatch();
+            $timelineDetail->setTimelineDetail($match);
+            $timelineDetail->setMatchId($matchId);
+
+            $em = $doctrine->getManager();
+            $em->persist($timelineDetail);
+            $em->flush();
+
+            $data = $doctrine->getRepository(TimelineMatch::class)->findOneBy(['matchId' => $matchId]);
+        }
+
         $dataMatch = [
             'matchId' => $data->getMatchId(),
             'timelineMatch' => $data->getTimelineDetail(),
