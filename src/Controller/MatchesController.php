@@ -51,11 +51,11 @@ class MatchesController extends AbstractController
     public function getMatchesApi($puuid, ManagerRegistry $doctrine, GetMatchesService $getMatches, MatchesRepository $matchesRepository): Response
     {
         $matchesListInBdd = $matchesRepository->findOneBy(['puuid' => $puuid]);
-
+        
         if (!$matchesListInBdd) {
             //Utilisation du service pour récupérer les donnée du summoner sur l'API RIOT
             $matchesList = $getMatches->getMatches($puuid);
-
+            // dd($matchesList["status"]["status_code"]);
             $matchesEntity = new Matches();
             $matchesEntity->setMatchesList($matchesList);
             $matchesEntity->setPuuid($puuid);

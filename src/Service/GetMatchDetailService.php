@@ -15,7 +15,7 @@ class GetMatchDetailService
 
     public function getMatchDetail($gameId)
     {
-        $token = $this->parameterGab->get('RIOT_API_KEY');
+        $token = $this->params->get('RIOT_API_KEY');
 
         $urlGetMatch = 'https://europe.api.riotgames.com/lol/match/v5/matches/' . $gameId;
         $headers = array('Access-Control-Allow-Origin: *',
@@ -23,7 +23,7 @@ class GetMatchDetailService
                     'Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
                     'Accept-Charset: application/x-www-form-urlencoded; charset=UTF-8"',
                     'Origin: https://developer.riotgames.com',
-                    `X-Riot-Token: $token`);
+                    'X-Riot-Token: ' . $token);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $urlGetMatch);
