@@ -3,18 +3,19 @@
 namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class GetMatchesService
 {
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, ParameterBagInterface $params)
     {
         $this->entityManager = $entityManager;
+        $this->params = $params;
     }
 
     public function getMatches($puuid)
     {
-        //A changer tout les 24h par la nouvel clé api :
-        // $tokenRiot = env('RIOT_API_KEY');
+        $token = $this->parameterGab->get('RIOT_API_KEY');
 
         $urlGetMatches = 'https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/' . $puuid . '/ids?start=0&count=10';
         $headers = array('Access-Control-Allow-Origin: *',
@@ -22,7 +23,7 @@ class GetMatchesService
                     'Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
                     'Accept-Charset: application/x-www-form-urlencoded; charset=UTF-8"',
                     'Origin: https://developer.riotgames.com',
-                    'X-Riot-Token: RGAPI-6023f7ee-0e72-4ea0-a12e-b3c69813f85e');
+                    `X-Riot-Token: $token`);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $urlGetMatches);
